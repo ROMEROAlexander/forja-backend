@@ -1,7 +1,3 @@
-/*
-  SERVER.JS - EL MOTOR CENTRAL DE FORJA
-  Este archivo coordina las rutas, la base de datos y los middlewares.
-*/
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -15,25 +11,24 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// MIDDLEWARES
+// MIDDLEWARES (Seguridad y procesamiento de datos)
 app.use(cors());
 app.use(express.json());
 
-// RUTAS DEL SISTEMA
-// Conectamos todas las rutas que definimos en forjaRoutes bajo el prefijo /api
+// CONEXIÓN DE RUTAS
+// Ahora todas tus funciones viven en forjaRoutes
 app.use('/api', forjaRoutes);
 
-// RUTA DE SALUD (Para verificar que el motor vive)
+// RUTA DE PRUEBA (Healthcheck)
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'Fuertes y Firmes', timestamp: new Date() });
+  res.status(200).json({ status: 'Motor de FORJA Activo', modo: 'Producción' });
 });
 
-// ARRANQUE E INICIALIZACIÓN
-// Primero inicializamos la DB (Crea tablas si no existen) y luego levantamos el servidor
+// ARRANQUE DEL SISTEMA
 initDatabase().then(() => {
   app.listen(port, () => {
     console.log(`[FORJA-CORE] Motor activo en puerto ${port}. Listo para la batalla, Rodrigo.`);
   });
 }).catch(err => {
-  console.error('[CRÍTICO] El Clan no pudo inicializar la base de datos:', err);
+  console.error('[CRÍTICO] Error al inicializar el Clan:', err);
 });
